@@ -4,6 +4,7 @@ const port = 4000
 const cors = require('cors');
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose');
+const path = require('path');
 
 //This enables the server to respond to preflight requests
 app.use(cors());
@@ -15,7 +16,10 @@ app.use(function(req, res, next) {
     "Origin, X-Requested-With, Content-Type, Accept");
     next();
     });
-   
+ //where to find the build folder  
+app.use(express.static(path.join(__dirname, '../build')));
+//where to find the static folder
+app.use('/static', express.static(path.join(__dirname, 'build//static')));
 //app.use is executed every time the server is used
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -112,7 +116,10 @@ app.put('/api/movies/:id', (req,res)=>{
         })
 
 })
-
+//sends up the local directory
+app.get('*', (req, res)=>{
+    res.sendFile(path.join(__dirname+ '/../build/index.html'));
+})
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
